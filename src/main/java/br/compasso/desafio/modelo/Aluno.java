@@ -1,26 +1,34 @@
 package br.compasso.desafio.modelo;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 
 @Entity
 @Table(name = "alunos")
-public class Aluno {
+public class Aluno implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Perfil> perfis = new ArrayList<Perfil>();
+
     @Column(name = "nomeCompleto", nullable = false)
     private String nomeCompleto;
 
-    @Column(name = "nomeUsuario", nullable = false)
+    @Column(name = "nomeUsuario", nullable = false, unique = true)
     private String nomeUsuario;
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "senha", nullable = false)
+    private String senha;
 
     @Column(name = "telefone", nullable = false)
     private long telefone;
@@ -53,6 +61,18 @@ public class Aluno {
         this.nomeCompleto = nomeCompleto;
         this.nomeUsuario = nomeUsuario;
         this.email = email;
+        this.telefone = telefone;
+        this.sexo = sexo;
+        this.dataNascimento = dataNascimento;
+        this.idade = idade;
+    }
+
+    public Aluno(long id, String nomeCompleto, String nomeUsuario, String email, String senha, long telefone, String sexo, Date dataNascimento, int idade) {
+        this.id = id;
+        this.nomeCompleto = nomeCompleto;
+        this.nomeUsuario = nomeUsuario;
+        this.email = email;
+        this.senha = senha;
         this.telefone = telefone;
         this.sexo = sexo;
         this.dataNascimento = dataNascimento;
@@ -134,5 +154,40 @@ public class Aluno {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.perfis;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.nomeUsuario;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
