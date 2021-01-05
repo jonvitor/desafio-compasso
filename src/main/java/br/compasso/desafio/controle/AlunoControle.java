@@ -5,6 +5,7 @@ import br.compasso.desafio.repositorio.AlunoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -46,6 +47,8 @@ public class AlunoControle {
 
     @PostMapping("/addAluno")
     public Aluno addAluno(@Validated @RequestBody Aluno aluno) {
+        String senhaBcrypt = new BCryptPasswordEncoder().encode(aluno.getSenha());
+        aluno.setSenha(senhaBcrypt);
         return this.alunoRepositorio.save(aluno);
     }
 

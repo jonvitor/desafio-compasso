@@ -12,11 +12,8 @@ import java.util.*;
 public class Aluno implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Perfil> perfis = new ArrayList<Perfil>();
 
     @Column(name = "nomeCompleto", nullable = false)
     private String nomeCompleto;
@@ -42,6 +39,9 @@ public class Aluno implements UserDetails {
 
     @Column(name = "idade", nullable = false)
     private int idade;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Perfil> perfis = new ArrayList<Perfil>();
 
     public Aluno() {
     }
@@ -79,7 +79,7 @@ public class Aluno implements UserDetails {
         this.idade = idade;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -143,6 +143,14 @@ public class Aluno implements UserDetails {
         this.idade = idade;
     }
 
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -190,4 +198,5 @@ public class Aluno implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
